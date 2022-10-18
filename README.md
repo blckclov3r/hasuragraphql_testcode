@@ -1,46 +1,112 @@
-# Getting Started with Create React App
+# Hasura
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+> The Hasura GraphQL Engine is an extremely lightweight, high performance product that gives you instant realtime GraphQL APIs on a Postgres database. This can be used to quickly build new applications on Postgres or fast-track the move to GraphQL for existing applications on Postgres.
 
-## Available Scripts
+## Example
+[Hasura Crash Course by Laith Academy][1]
 
-In the project directory, you can run:
+### Mutation Insert 
+```
+mutation{
+  insert_posts(objects:{
+    content:"This is my mutation posts",
+    title: "My mutation",
+    user_id: 1
+  }){
+    returning{
+      title
+      user {
+        username
+      }
+    }
+  }
+}
 
-### `npm start`
+```
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+### Mutation Update
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+```
+mutation{
+  update_users_by_pk(pk_columns:{id:1}, _set: {
+    age: 99
+  }){
+    id
+    username
+  }
+}
+```
 
-### `npm test`
+### Mutation Delete
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+```
+mutation{
+  delete_users_by_pk(id: 5){
+    id
+    username
+  }
+}
+```
 
-### `npm run build`
+### Select All
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+```
+query{
+  users{
+    id
+    username
+  }
+}
+```
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### Select and Where clase
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+```
+query{
+  users(where: {gender:{_eq: false}}) {
+    id
+    username
+  }
+}
+```
 
-### `npm run eject`
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+### Search by primary key
+```
+query{
+  users_by_pk(id: 1){
+    username
+    posts{
+      title
+      content
+      id
+    },
+    comments{
+      content
+      id
+    }
+  }
+}
+```
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+```
+{
+  posts_by_pk(id: 1){
+    title
+    content
+    comments(order_by: {id: desc}){
+      id
+      content
+      user{
+        username
+      }
+    }
+  }
+}
+```
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+[1]:https://www.youtube.com/watch?v=BNo0WROmij8 
 
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+ ----- 
+ HackMD Note URL: https://hackmd.io/Wux1wxsPRe2nAWa78tf93g
